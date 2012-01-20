@@ -14,5 +14,5 @@ class PimpedProcess(p: Process) {
 
   def hasNext = str != null
   def next = {val current = str; str = br.readLine; current}
-  def watch(grep: Array[Char]) = while (hasNext) {println(next)}
+  def watch(grep: List[Char]) = while (hasNext) {println(next)}
 }

@@ -1,20 +1,22 @@
 package com.joshcough.cpu.memory
 
 
-import electric.Switch
 import org.scalatest.FunSuite
-import BitsToList._
-import pimped.Equalizer._
-import test.Timers
+import com.joshcough.cpu.BitList._
+import com.joshcough.pimped.Equalizer._
+import com.joshcough.test.Timers
+import com.joshcough.cpu.AllSwitchBitList
+import com.joshcough.cpu.electric.Switch
+import com.joshcough.cpu.electric.State._
 
 
 /**
- * @author dood
- * Date: Jun 6, 2009
- * Time: 10:59:49 PM
- */
+* @author dood
+* Date: Jun 6, 2009
+* Time: 10:59:49 PM
+*/
 trait RAMTest extends FunSuite with Timers{
-    
+
   test("can set and get all addresses 4x16") {
     withRam(4, 4)(testAllRamAddresses _)
   }
@@ -33,9 +35,9 @@ trait RAMTest extends FunSuite with Timers{
    * 64066/1024 = 62 ms for a single write
    * 79971/1024 = 78 ms for a single read
    */
-  test("can set and get all addresses 32x10 (4096B or 4kB)") {
-    withRam(32, 10)(testAllRamAddresses _)
-  }
+//  test("can set and get all addresses 32x10 (4096B or 4kB)") {
+//    withRam(32, 10)(testAllRamAddresses _)
+//  }
 
   test("timings for one operation in 512B ram") {
     withRam(16, 8) {
@@ -61,8 +63,8 @@ trait RAMTest extends FunSuite with Timers{
              (f: (AllSwitchBitList, AllSwitchBitList, Switch, RAM) => Unit) {
     val data = AllSwitchBitList(registerWidth)
     val address = AllSwitchBitList(addressWidth)
-    val writeBit = Switch.off
-    val ram = timed("creating ram") {FastRAM(data, address, writeBit)} //RAM!
+    val writeBit = Switch(Off)
+    val ram = timed("creating ram") {RealRAM(data, address, writeBit)} //RAM!
     f(data, address, writeBit, ram)
   }
 
@@ -87,5 +89,4 @@ trait RAMTest extends FunSuite with Timers{
       }
     }
   }
-
 }

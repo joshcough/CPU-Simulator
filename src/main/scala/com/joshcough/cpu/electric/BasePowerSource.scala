@@ -1,41 +1,37 @@
 package com.joshcough.cpu.electric
 
-import scala.collection.mutable.HashSet
+import collection.mutable.ListBuffer
 
-trait BasePowerSource extends PowerSource {
-  
-  private val incomingPowerSources = new HashSet[PowerSource]
-  private val outgoingPowerConnections = new HashSet[PowerSource]
+trait Outbound extends PowerSource {
+  val outputs = ListBuffer[InboundPowerAcceptor]()
+  def -->(p: InboundPowerAcceptor) = {
+    if (!(outputs contains p)) { outputs += p; p <-- this }
+    p
+  }
+  def notifyConnections() { outputs.foreach(_.handleStateChanged(this)) }
+}
 
-  private var currentState: State = Off
-  def state = currentState
+abstract class BasePowerSource(val initialInputs:List[PowerSource])
+  extends InboundPowerAcceptor with Outbound {
 
-  def -->(p: PowerSource) = connect(p, outgoingPowerConnections){p <-- this}
-  def <--(p: PowerSource) = connect(p, incomingPowerSources){updateOnOff}
+  val inputs: ListBuffer[PowerSource] = ListBuffer(initialInputs:_*)
+  inputs.foreach(_-->this)
+  var state: Boolean = calculateNewState(inputs.toList)
 
-  def disconnectFrom(p: PowerSource) = disconnect(p, outgoingPowerConnections){p disconnectedFrom this}
-  def disconnectedFrom(p: PowerSource) = disconnect(p, incomingPowerSources){updateOnOff}
+  def calculateNewState(inputs: List[PowerSource]): Boolean
 
-  private def connect(p: PowerSource, sources: HashSet[PowerSource])(f: => Unit): PowerSource = {
-    if (!(sources contains p)) {sources += p; f}
+  def <--(p: PowerSource) = {
+    if (!(inputs contains p)) { inputs += p; updateOnOff() }
     p
   }
 
-  private def disconnect(p: PowerSource, sources: HashSet[PowerSource])(f: => Unit): PowerSource = {
-    if (sources contains p) {sources -= p; f}
-    p
-  }
+  def handleStateChanged(p: PowerSource){ updateOnOff() }
 
-  def notifyConnections = outgoingPowerConnections.foreach(p => p.handleStateChanged(this))
-  def handleStateChanged(p: PowerSource) = updateOnOff
-
-  private def updateOnOff = {
-    def shouldSwitch = currentState() != isAnyIncomingPowerSourceOn
-    def isAnyIncomingPowerSourceOn = incomingPowerSources.find(_.state == On).isDefined
-
-    if (shouldSwitch) {
-      currentState = currentState.switch
-      notifyConnections
+  def updateOnOff() {
+    val newState = calculateNewState(inputs.toList)
+    if (state != newState) {
+      state = newState
+      notifyConnections()
     }
   }
 }

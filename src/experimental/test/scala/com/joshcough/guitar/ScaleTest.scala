@@ -1,7 +1,7 @@
 //package com.joshcough.guitar
 //
 //import org.testng.annotations.Test
-//import pimped.Equalizer._
+//import com.joshcough.pimped.Equalizer._
 //import Music._
 //import Scale._
 //import ScaleMatchers._

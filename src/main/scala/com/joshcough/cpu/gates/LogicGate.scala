@@ -1,34 +1,15 @@
 package com.joshcough.cpu.gates
 
-import electric._
+import com.joshcough.cpu.electric.{Wire, Inverter, State, BasePowerSource, PowerSource}
+import Inverter.inverter
+import State._
 
 object LogicGate{
-  implicit def logicGateToPowerSource( lg: LogicGate ): PowerSource = lg.output
-}
-
-trait LogicGate{
-  val output: PowerSource
-}
-
-case class AndGate(inputs: PowerSource*) extends LogicGate {
-  def this(inputs:List[PowerSource]) = this(inputs:_*)
-  val output: PowerSource = inputs.foldLeft(Relay(Switch.on)){ (a, b) => Relay(a, b) }
-}
-
-case class NandGate(inputs: PowerSource*) extends LogicGate{
-  val output = new Wire
-  inputs.foreach(p => Inverter(p)-->output)
-}
-
-case class NorGate(inputs: PowerSource*) extends LogicGate{
-  val output: PowerSource = Inverter( OrGate(inputs:_*) )
-}
-
-case class OrGate(inputs: PowerSource*) extends LogicGate{
-  val output = new Wire
-  inputs.foreach(_ --> output)
-}
-
-case class XorGate(a: PowerSource, b: PowerSource) extends LogicGate {
-  val output: PowerSource = AndGate(OrGate(a, b), NandGate(a, b))
+  def and(is: PowerSource*) = new BasePowerSource(is.toList){
+    def calculateNewState(inputs: List[PowerSource]) = inputs.forall(_.state == On)
+  }
+  def or  (ins: PowerSource*) = new Wire(ins:_*)
+  def nand(ins: PowerSource*) = inverter(and(ins:_*))
+  def nor (ins: PowerSource*) = inverter(or(ins:_*))
+  def xor (a: PowerSource, b: PowerSource) = and(or(a, b), nand(a, b))
 }

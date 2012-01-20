@@ -22,7 +22,7 @@
 //  val actor = Actors.newReactor{ case p: PowerSource => updateOutputWire( p ) }
 //  actor.start
 //
-//  private val inputToSwitch,output = (Switch.on, new Wire)
+//  private val inputToSwitch,output = (Switch(On), new Wire)
 //
 //  private var ironBar = {
 //    val ironBar = new IronBar

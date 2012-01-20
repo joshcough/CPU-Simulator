@@ -6,6 +6,6 @@ package com.joshcough.cpu.alu
  * Time: 12:12:16 PM
  */
 
-trait ALUTests extends FullAdderTest with HalfAdderTest with NBitAdderTest
+trait ALUTests extends HalfAdderTest with FullAdderTest with NBitAdderTest
 
 class ALUTestsClass extends ALUTests

@@ -1,39 +1,44 @@
 package com.joshcough.cpu.gates;
 
 import org.scalatest.FunSuite
-import org.testng.annotations._
-import pimped.Equalizer._
-import electric._
+import com.joshcough.pimped.Equalizer._
+import com.joshcough.cpu.electric._
+import com.joshcough.cpu.electric.State._
+import com.joshcough.cpu.electric.Switch
+import com.joshcough.cpu.gates.LogicGate._
+
+class NandGateTestClass extends NandGateTest
 
 trait NandGateTest extends FunSuite{
 
   test("test NandGate WithTwoOnSwitches"){
-    NandGate(Switch.on, Switch.on).state mustBe Off
+    val n = nand(Switch(On), Switch(On))
+    n.state mustBe Off
   }
   
   test("test NandGate WithTwoOffSwitches"){
-    NandGate(Switch.off, Switch.off).state mustBe On
+    nand(Switch(Off), Switch(Off)).state mustBe On
   }
   
   test("test NandGateWithOneOnSwitchNandOneOffSwitch"){
-    NandGate(Switch.on, Switch.off).state mustBe On
-    NandGate(Switch.off, Switch.on).state mustBe On
+    nand(Switch(On), Switch(Off)).state mustBe On
+    nand(Switch(Off), Switch(On)).state mustBe On
   }  
   
   test("test NandGate While Toggling Switch States"){
-    val genA = Switch.on
-    val genB = Switch.on
-    val nand = NandGate(genA, genB)
+    val switchA = Switch(On)
+    val switchB = Switch(On)
+    val nand = LogicGate.nand(switchA, switchB)
     nand.state mustBe Off
     
-    genA.turnOff; nand.state mustBe On
-    genA.turnOn;  nand.state mustBe Off
+    switchA.turnOff; nand.state mustBe On
+    switchA.turnOn;  nand.state mustBe Off
     
-    genB.turnOff; nand.state mustBe On
-    genB.turnOn; nand.state mustBe Off
+    switchB.turnOff; nand.state mustBe On
+    switchB.turnOn; nand.state mustBe Off
     
-    genA.turnOff; genB.turnOff; nand.state mustBe On
-    genA.turnOn; genB.turnOn; nand.state mustBe Off
+    switchA.turnOff; switchB.turnOff; nand.state mustBe On
+    switchA.turnOn; switchB.turnOn; nand.state mustBe Off
   }
   
 }

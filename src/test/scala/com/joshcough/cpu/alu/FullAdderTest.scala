@@ -1,68 +1,70 @@
 package com.joshcough.cpu.alu;
 
 import com.joshcough.cpu.electric._
+import com.joshcough.cpu.electric.State._
 import com.joshcough.cpu.gates._
 import com.joshcough.cpu.alu._
 import org.scalatest.FunSuite
-import pimped.Equalizer._
+import com.joshcough.pimped.Equalizer._
+import com.joshcough.cpu.alu.Adders.FullAdder
 
 trait FullAdderTest extends FunSuite{
 
   test("FullAdder With Three On Switches"){
-    val fa = FullAdder( Switch.on, Switch.on, Switch.on )
+    val fa = FullAdder( Switch(On), Switch(On), Switch(On) )
     fa.getSumOut.state mustBe On
     fa.getCarryOut.state mustBe On
   }
 
   test("FullAdder With Three Off Switches"){
-    val fa = FullAdder( Switch.off, Switch.off, Switch.off )
+    val fa = FullAdder( Switch(Off), Switch(Off), Switch(Off) )
     fa.getSumOut.state mustBe Off
     fa.getCarryOut.state mustBe Off
   }
   
   test("only Sum Out Should Be On With One On Input"){
-    val fa = FullAdder( Switch.on, Switch.off, Switch.off )
+    val fa = FullAdder( Switch(On), Switch(Off), Switch(Off) )
     fa.getSumOut.state mustBe On
     fa.getCarryOut.state mustBe Off
   }
   
   test("only Carry Out Should Be On With Two On Inputs"){
-    val fa = FullAdder( Switch.on, Switch.on, Switch.off )
+    val fa = FullAdder( Switch(On), Switch(On), Switch(Off) )
     fa.getSumOut.state mustBe Off
     fa.getCarryOut.state mustBe On
   }  
   
   test("Turning On And Off FullAdder Inputs"){
-    val genA = Switch.on
-    val genB = Switch.on
-    val genC = Switch.on
-    val fa = FullAdder( genA, genB, genC )
+    val switchA = Switch(On)
+    val switchB = Switch(On)
+    val switchC = Switch(On)
+    val fa = FullAdder( switchA, switchB, switchC )
     
     fa.getSumOut.state mustBe On
     fa.getCarryOut.state mustBe On
     
-    genA.turnOff
+    switchA.turnOff
     fa.getSumOut.state mustBe Off
     fa.getCarryOut.state mustBe On
     
-    genB.turnOff
+    switchB.turnOff
     fa.getSumOut.state mustBe On
     fa.getCarryOut.state mustBe Off
     
-    genC.turnOff
+    switchC.turnOff
     fa.getSumOut.state mustBe Off
     fa.getCarryOut.state mustBe Off
     
     
-    genB.turnOn
+    switchB.turnOn
     fa.getSumOut.state mustBe On
     fa.getCarryOut.state mustBe Off
     
-    genA.turnOn
+    switchA.turnOn
     fa.getSumOut.state mustBe Off
     fa.getCarryOut.state mustBe On
     
-    genC.turnOn
+    switchC.turnOn
     fa.getSumOut.state mustBe On
     fa.getCarryOut.state mustBe On
   }

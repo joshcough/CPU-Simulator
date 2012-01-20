@@ -1,28 +1,30 @@
 package com.joshcough.cpu.electric
 
-object Switch{
-  def on = this(On)
-  def off = this(Off)
-  def apply(state:State) = new Switch(state)
+object State {
+  val On = true
+  val Off = false
+  implicit def pimpedBoolean(b: Boolean) = new {
+    def toInt = if(b) 1 else 0
+  }
 }
 
-class Switch( private var currentState: State ) extends BasePowerSource {
+import State._
 
-  override def state = currentState
+object Switch{
+  def apply(state:Boolean) = new Switch(state)
+}
 
-  def turnOn  = switchIf( Off )
-  def turnOff = switchIf( On )
-  def flip    = switchIf(currentState)
+class Switch(var state: Boolean) extends Outbound {
+
+  def turnOn  = switchIf(state == Off)
+  def turnOff = switchIf(state == On)
+  def flip    = switchIf(true)
     
-  private def switchIf( s: State ): Switch = {
-    if( currentState == s ) {
-      currentState = currentState.switch
-      notifyConnections
-    }
+  private def switchIf(b: Boolean): Switch = {
+    if(b) { state = ! state; notifyConnections() }
     this
   }
 
   override def toString = "Switch(" + state + ")"
-
-  def toInt = state.toInt
+  def toInt = (if(state) "1" else "0")
 }

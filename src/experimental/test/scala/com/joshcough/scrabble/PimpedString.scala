@@ -2,7 +2,7 @@
 //
 //import org.testng.annotations.Test
 //import WordMatchers._
-//import pimped.Equalizer._
+//import com.joshcough.pimped.Equalizer._
 //import search.Criteria._
 //
 //class WordTest {

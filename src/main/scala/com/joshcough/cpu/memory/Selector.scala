@@ -6,10 +6,9 @@
  */
 package com.joshcough.cpu.memory
 
-import electric.{PowerSource, Inverter}
-import gates.{OrGate, AndGate}
-import gates.LogicGate._
-import cpu.BitsToList._
+import com.joshcough.cpu.BitList
+import com.joshcough.cpu.electric.PowerSource
+import com.joshcough.cpu.gates.LogicGate._
 
 // number of bits required (data, address)
 // wish i could somehow do this with the type system
@@ -45,26 +44,24 @@ which outputs 00000000
 all the 7 registers who you arent interested in all output 00000000
  */
 
-case class Selector(val addressInputs: BitList,registers:List[List[PowerSource]]) extends Addressable{
+case class Selector(addressInputs: BitList,registers:List[List[PowerSource]]) extends Addressable{
 
   // hook the registers and selectors up to and gates
-  private val ands: List[List[AndGate]] = addresses.zip(registers.toList).map {
-    case (l: List[PowerSource], bits: List[PowerSource]) => {
-      bits.map(b => new AndGate(b :: l))
-    }
+  private val ands = addresses.zip(registers.toList).map {
+    case (ps: List[PowerSource], bits: List[PowerSource]) => bits.map(b => and(b :: ps:_*))
   }
 
   val outputs: BitList = {
     val registerLength = registers(0).size
-    val orGates = for (i <- 0 until registerLength) yield OrGate(ands.map(_(i)): _*)
-    BitList(orGates.toList.map(_.output))
+    val orGates = for (i <- 0 until registerLength) yield or(ands.map(_(i)) :_*)
+    new BitList(orGates.toList)
   }
 
-  def dump {
+  def dump() {
     println("--------------start of selector--------------")
     println(this)
     println("addresses: " + addresses.map { as => BitList(as.map{case p:PowerSource => p})})
-    println("ands: " + ands.map {as => BitList(as.map(_.output))})
+    println("ands: " + ands.map(a => BitList(a)))
     println("outputs:" + outputs)
     println("--------------end of selector--------------")
   }

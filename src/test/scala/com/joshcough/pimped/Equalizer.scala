@@ -1,10 +1,11 @@
 package com.joshcough.pimped
 
 import scala.xml.{Elem, PrettyPrinter}
-import org.testng.Assert._
+import org.scalatest.Assertions._
 
 case object Equalizer {
   implicit def anyToCompare(a: Any) = new Equalizer(a)
+  implicit def booleanToCompare(b: Boolean) = new Equalizer(b)
   implicit def xmlComparator(x: Elem) = new XmlEqualizer(x)
 }
 
@@ -23,8 +24,8 @@ class Equalizer(a: Any) {
         val message = "In Equalizer: expecting one of=" + bs + "\nIn Equalizer: actual  =" + a
         //println(message)
         bs size match {
-          case 1 => assertEquals(a, bs(0), message)
-          case _ => assertTrue(bs.contains(a), message)
+          case 1 => assert(a === bs(0), message)
+          case _ => assert(bs.contains(a), message)
         }
       }
     }
@@ -35,7 +36,7 @@ class Equalizer(a: Any) {
     else println("In Equalizer: expecting one of=" + bs + " or null\nIn Equalizer: actual  =" + a)
   }
 
-  def cantBe(b: Any) = assertFalse(a == b)
+  def cantBe(b: Any) = assert(a != b)
 
   def is(b: Any) = a equals b
 
@@ -76,9 +77,6 @@ class Equalizer(a: Any) {
 
 class XmlEqualizer(ax: Elem) {
   def mustBe(bx: Elem) = {
-    assertEquals(
-      new PrettyPrinter(120, 3).formatNodes(ax),
-      new PrettyPrinter(120, 3).formatNodes(bx)
-      )
+    assert(new PrettyPrinter(120, 3).formatNodes(ax) === new PrettyPrinter(120, 3).formatNodes(bx))
   }
 }

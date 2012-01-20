@@ -4,7 +4,7 @@
 //import com.joshcough.cpu.gates._
 //import com.joshcough.cpu.alu._
 //import org.testng.annotations._
-//import pimped.Equalizer._
+//import com.joshcough.pimped.Equalizer._
 //
 //class PlaygroundTest {
 //

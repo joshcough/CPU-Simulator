@@ -1,30 +1,30 @@
 #include <iostream>
 using namespace std;
 
-class CVector {
+class CList {
   public:
     int x,y;
-    CVector () {};
-    CVector (int,int);
-    CVector operator + (CVector);
+    CList () {};
+    CList (int,int);
+    CList operator + (CList);
 };
 
-CVector::CVector (int a, int b) {
+CList::CList (int a, int b) {
   x = a;
   y = b;
 }
 
-CVector CVector::operator+ (CVector param) {
-  CVector temp;
+CList CList::operator+ (CList param) {
+  CList temp;
   temp.x = x + param.x;
   temp.y = y + param.y;
   return (temp);
 }
 
 int main () {
-  CVector a (3,1);
-  CVector b (1,2);
-  CVector c;
+  CList a (3,1);
+  CList b (1,2);
+  CList c;
   c = a + b;
   cout << c.x << "," << c.y;
   return 0;

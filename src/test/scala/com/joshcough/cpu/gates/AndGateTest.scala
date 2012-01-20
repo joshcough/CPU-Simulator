@@ -1,38 +1,33 @@
 package com.joshcough.cpu.gates;
 
-import electric.Switch
 import org.scalatest.FunSuite
-import pimped.Equalizer._
-import electric._
+import com.joshcough.cpu.electric.Switch
+import com.joshcough.cpu.electric.State._
+import com.joshcough.pimped.Equalizer._
 
 trait AndGateTest extends FunSuite{
-  
-  test("And Gate With Two On Switches"){
-    AndGate(Switch.on, Switch.on).state mustBe On
+
+  val switches = List(Switch(On), Switch(Off))
+
+  for(switchA <- switches; switchB <- switches){
+    test("And Gate States: " + switchA + ", " + switchB){
+      LogicGate.and(switchA, switchB).state mustBe (switchA.state && switchB.state)
+    }
   }
-  
-  test("And Gate With Two Off Switches"){
-    AndGate(Switch.off, Switch.off).state mustBe Off
-  }
-  
-  test("And Gate With One On Switch and One Off Switch"){
-    AndGate(Switch.on, Switch.off).state mustBe Off
-    AndGate(Switch.off, Switch.on).state mustBe Off
-  }  
 
   test("And Gate While Toggling Switch States"){
-    val genA = Switch.on
-    val genB = Switch.on
-    val and = AndGate(genA, genB)
+    val switchA = Switch(On)
+    val switchB = Switch(On)
+    val and = LogicGate.and(switchA, switchB)
     and.state mustBe On
     
-    genA.turnOff; and.state mustBe Off
-    genA.turnOn;  and.state mustBe On
+    switchA.turnOff; and.state mustBe Off
+    switchA.turnOn;  and.state mustBe On
     
-    genB.turnOff; and.state mustBe Off
-    genB.turnOn; and.state mustBe On
+    switchB.turnOff; and.state mustBe Off
+    switchB.turnOn; and.state mustBe On
     
-    genA.turnOff; genB.turnOff; and.state mustBe Off
-    genA.turnOn; genB.turnOn; and.state mustBe On
+    switchA.turnOff; switchB.turnOff; and.state mustBe Off
+    switchA.turnOn; switchB.turnOn; and.state mustBe On
   }
 }

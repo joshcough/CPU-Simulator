@@ -6,10 +6,12 @@
  */
 package com.joshcough.cpu.memory
 
-import electric.Switch
 import org.scalatest.FunSuite
-import BitsToList._
-import pimped.Equalizer._
+import com.joshcough.cpu.BitList._
+import com.joshcough.pimped.Equalizer._
+import com.joshcough.cpu.electric.Switch
+import com.joshcough.cpu.electric.State._
+import com.joshcough.cpu.{BitList, AllSwitchBitList}
 
 
 trait DecoderTest extends FunSuite{
@@ -17,7 +19,7 @@ trait DecoderTest extends FunSuite{
   test("decoder"){
     val data = AllSwitchBitList(8)
     val address = AllSwitchBitList(2)
-    val writeBit = Switch.on
+    val writeBit = Switch(On)
     val decoder = Decoder(data, address, writeBit)
 
     data.flip(0,7)

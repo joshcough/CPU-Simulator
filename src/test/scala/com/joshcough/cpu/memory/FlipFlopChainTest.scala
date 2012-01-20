@@ -6,17 +6,19 @@
  */
 package com.joshcough.cpu.memory
 
-import electric.Switch
 import org.scalatest.FunSuite
-import pimped.Equalizer._
-import BitsToList._
+import com.joshcough.pimped.Equalizer._
+import com.joshcough.cpu.BitList._
+import com.joshcough.cpu.AllSwitchBitList
+import com.joshcough.cpu.electric.Switch
+import com.joshcough.cpu.electric.State._
 
 class FlipFlopChainTest extends FunSuite {
   
   test("by default with write bit off, flip flop should contain all zeros") {
     val data = AllSwitchBitList(8)
     data.flipAllBits
-    val writeBit = Switch.off
+    val writeBit = Switch(Off)
 
     val chain = Register(data, writeBit)
 
@@ -28,7 +30,7 @@ class FlipFlopChainTest extends FunSuite {
   test("by default with write bit on, flip flop should take on its data") {
     val data = AllSwitchBitList(8)
     data.flipAllBits
-    val writeBit = Switch.on
+    val writeBit = Switch(On)
 
     val chain = Register(data, writeBit)
     chain.output.toString mustBe "11111111"
@@ -36,7 +38,7 @@ class FlipFlopChainTest extends FunSuite {
 
   test("changes to data with write bit off should not be remembered") {
     val data = AllSwitchBitList(8)
-    val writeBit = Switch.off
+    val writeBit = Switch(Off)
     val chain = Register(data, writeBit)
 
     data flip 3
@@ -50,7 +52,7 @@ class FlipFlopChainTest extends FunSuite {
 
   test("change states of write bit and make sure things hold") {
     val data = AllSwitchBitList(8)
-    val writeBit = Switch.on
+    val writeBit = Switch(On)
 
     // create a new chain with data all zeros, and the write bit on.
     val chain = Register(data, writeBit)

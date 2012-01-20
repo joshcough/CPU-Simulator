@@ -8,7 +8,6 @@ package com.joshcough.cpu.memory
 
 import com.joshcough.cpu.electric.PowerSource
 import com.joshcough.cpu.BitList
-import com.joshcough.cpu.BitsToList._
 
 case class Register(data: BitList, writeBit: PowerSource) {
   val flipFlops = data.map( FlipFlop(_, writeBit ) )

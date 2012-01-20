@@ -1,6 +1,5 @@
 package com.joshcough.cpu.memory
 
-
 import org.scalatest.FunSuite
 
 /**

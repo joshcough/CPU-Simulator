@@ -1,6 +1,5 @@
 package com.joshcough.cpu.gates
 
-
 import org.scalatest.FunSuite
 
 /**

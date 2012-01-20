@@ -1,18 +1,17 @@
 package com.joshcough.cpu.memory
 
-;
-
 import com.joshcough.cpu.electric._
+import com.joshcough.cpu.electric.State._
 import com.joshcough.cpu.memory._
 import org.scalatest.FunSuite
-import pimped.Equalizer._
+import com.joshcough.pimped.Equalizer._
 
 trait FlipFlopTest extends FunSuite{
 
   test("flip flop") {
 
-    val dataBit = Switch.on
-    val writeBit = Switch.on
+    val dataBit = Switch(On)
+    val writeBit = Switch(On)
 
     val flipFlop = FlipFlop(dataBit, writeBit)
 

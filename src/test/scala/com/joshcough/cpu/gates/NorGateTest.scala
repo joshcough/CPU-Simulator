@@ -1,40 +1,41 @@
 package com.joshcough.cpu.gates
 
-import electric.Switch
+import com.joshcough.cpu.electric.State._
 import org.scalatest.FunSuite
-import org.testng.annotations._
-import pimped.Equalizer._
-import electric._
+import com.joshcough.pimped.Equalizer._
+import com.joshcough.cpu.electric.Switch
+import com.joshcough.cpu.gates.LogicGate._
+import com.joshcough.cpu.electric.State._
 
 trait NorGateTest extends FunSuite{
   
   test("test NorGate With Two On Switches"){
-    NorGate(Switch.on, Switch.on).state mustBe Off
+    nor(Switch(On), Switch(On)).state mustBe Off
   }
 
   test("test NorGate With Two Off Switches"){
-    NorGate(Switch.off, Switch.off).state mustBe On
+    nor(Switch(Off), Switch(Off)).state mustBe On
   }
   
   test("test NorGate With One On Switch and One Off Switch"){
-    NorGate(Switch.on, Switch.off).state mustBe Off
-    NorGate(Switch.off, Switch.on).state mustBe Off
+    nor(Switch(On), Switch(Off)).state mustBe Off
+    nor(Switch(Off), Switch(On)).state mustBe Off
   }  
 
   test("test NorGate While Toggling Switch States"){
-    val genA = Switch.on
-    val genB = Switch.on
-    val nor = NorGate(genA, genB)
-    nor.state mustBe Off
+    val switchA = Switch(On)
+    val switchB = Switch(On)
+    val n = nor(switchA, switchB)
+    n.state mustBe Off
     
-    genA.turnOff; nor.state mustBe Off
-    genA.turnOn;  nor.state mustBe Off
+    switchA.turnOff; n.state mustBe Off
+    switchA.turnOn;  n.state mustBe Off
     
-    genB.turnOff; nor.state mustBe Off
-    genB.turnOn; nor.state mustBe Off
+    switchB.turnOff; n.state mustBe Off
+    switchB.turnOn; n.state mustBe Off
     
-    genA.turnOff; genB.turnOff; nor.state mustBe On
-    genA.turnOn; genB.turnOn; nor.state mustBe Off
+    switchA.turnOff; switchB.turnOff; n.state mustBe On
+    switchA.turnOn; switchB.turnOn; n.state mustBe Off
   }
   
 }

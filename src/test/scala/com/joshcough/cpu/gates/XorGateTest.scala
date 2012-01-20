@@ -1,39 +1,40 @@
 package com.joshcough.cpu.gates;
 
 import org.scalatest.FunSuite
-import org.testng.annotations._
-import pimped.Equalizer._
-import electric._
+import com.joshcough.pimped.Equalizer._
+import com.joshcough.cpu.electric.Switch
+import com.joshcough.cpu.electric.State._
+import com.joshcough.cpu.gates.LogicGate._
 
 trait XorGateTest extends FunSuite{
 
   test("test XorGate With Two On Switches"){
-    XorGate(Switch.on, Switch.on).state mustBe Off
+    xor(Switch(On), Switch(On)).state mustBe Off
   }
 
   test("test XorGate With Two Off Switches"){
-    XorGate(Switch.off, Switch.off).state mustBe Off
+    xor(Switch(Off), Switch(Off)).state mustBe Off
   }
   
   test("test XorGate With One On Switch and One Off Switch"){
-    XorGate(Switch.on, Switch.off).state mustBe On
-    XorGate(Switch.off, Switch.on).state mustBe On
+    xor(Switch(On), Switch(Off)).state mustBe On
+    xor(Switch(Off), Switch(On)).state mustBe On
   }  
   
   test("test XorGate While Toggling Switch States"){
-    val genA = Switch.on
-    val genB = Switch.on
-    val xor = XorGate(genA, genB)
-    xor.state mustBe Off
+    val switchA = Switch(On)
+    val switchB = Switch(On)
+    val x = xor(switchA, switchB)
+    x.state mustBe Off
     
-    genA.turnOff; xor.state mustBe On
-    genA.turnOn;  xor.state mustBe Off
+    switchA.turnOff; x.state mustBe On
+    switchA.turnOn;  x.state mustBe Off
     
-    genB.turnOff; xor.state mustBe On
-    genB.turnOn; xor.state mustBe Off
+    switchB.turnOff; x.state mustBe On
+    switchB.turnOn; x.state mustBe Off
     
-    genA.turnOff; genB.turnOff; xor.state mustBe Off
-    genA.turnOn; genB.turnOn; xor.state mustBe Off
+    switchA.turnOff; switchB.turnOff; x.state mustBe Off
+    switchA.turnOn; switchB.turnOn; x.state mustBe Off
   }
   
 }

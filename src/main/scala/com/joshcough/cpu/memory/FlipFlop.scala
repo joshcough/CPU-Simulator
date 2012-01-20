@@ -1,17 +1,17 @@
 package com.joshcough.cpu.memory
 
-import cpu.electric._
-import cpu.gates._
+import com.joshcough.cpu.electric.{Inverter, Wire, PowerSource}
+import com.joshcough.cpu.gates.LogicGate._
 
 case class FlipFlop( dataBit: PowerSource, writeBit: PowerSource ) {
 
-  private val inverter = Inverter( dataBit )
-  private val invertedDataAnd = AndGate( inverter, writeBit )
-  private val dataAnd = AndGate( dataBit, writeBit )
+  private val inverter = Inverter.inverter( dataBit )
+  private val invertedDataAnd = and( inverter, writeBit )
+  private val dataAnd = and( dataBit, writeBit )
 
   private val outputWire = new Wire
-  private val dataNor = NorGate( dataAnd, outputWire )
-  private val invertedDataNor = NorGate( invertedDataAnd, dataNor )
+  private val dataNor = nor( dataAnd, outputWire )
+  private val invertedDataNor = nor( invertedDataAnd, dataNor )
 
   invertedDataNor --> outputWire
 
@@ -19,7 +19,7 @@ case class FlipFlop( dataBit: PowerSource, writeBit: PowerSource ) {
 
   val output: PowerSource = outputWire
 
-  def dump = {
+  def dump(){
     println( "databit: " + dataBit.state )
     println( "writeBit: " + writeBit.state )
     println( "inverter: " + inverter.state )
@@ -66,11 +66,11 @@ invertedDataNor --> outputWire
 
 
 private val inverter = Inverter()
-private val invertedDataAnd = AndGate()
-private val dataAnd = AndGate()
+private val invertedDataAnd = and()
+private val dataAnd = and()
 private val outputWire = new Wire()
-private val dataNor = NorGate()
-private val invertedDataNor = NorGate()
+private val dataNor = nor()
+private val invertedDataNor = nor()
 
 
 dataBit --> Inverter

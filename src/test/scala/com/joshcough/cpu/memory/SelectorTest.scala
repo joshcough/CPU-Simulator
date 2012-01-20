@@ -6,10 +6,11 @@
  */
 package com.joshcough.cpu.memory
 
-import electric.{On, Off}
+import com.joshcough.cpu.electric.State._
 import org.scalatest.FunSuite
-import pimped.Equalizer._
-import BitsToList._
+import com.joshcough.pimped.Equalizer._
+import com.joshcough.cpu.BitList._
+import com.joshcough.cpu.AllSwitchBitList
 
 
 trait SelectorTest extends FunSuite {
